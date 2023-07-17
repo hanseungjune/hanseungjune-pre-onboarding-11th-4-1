@@ -1,5 +1,7 @@
 import { styled } from "styled-components";
 import { FaSearch } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const SearchFormStyle = styled.form`
   width: 50rem;
@@ -61,6 +63,12 @@ const SearchSubmitContainerStyle = styled.div`
 `;
 
 const SearchForm = () => {
+  const [typing, setTyping] = useState('');
+
+  const typingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTyping(e.target.value)
+  }
+
   return (
     <SearchFormStyle>
       <SearchInputContainerStyle>
@@ -68,6 +76,7 @@ const SearchForm = () => {
         <SearchInputStyle
           type="text"
           placeholder="질병 및 질환 관련 키워드를 검색해보세요."
+          onChange={typingChange}
         />
       </SearchInputContainerStyle>
       <SearchSubmitContainerStyle>
