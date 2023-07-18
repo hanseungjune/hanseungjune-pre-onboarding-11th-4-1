@@ -50,6 +50,29 @@ const SearchResultList = () => {
   const typing = useTyping();
   const showing = useShowing();
   const dispatch = useDispatch();
+  let timeoutId: NodeJS.Timeout | null = null;
+
+  useEffect(() => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    if (typing !== "") {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      timeoutId = setTimeout(async () => {
+        const response = await httpClient.get(`?q=${typing}`);
+        dispatch(setShowing(response.data));
+      }, 300);
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [dispatch, typing]);
+
+  console.log(showing);
 
   return (
     <SearchedListContainerStyle>
