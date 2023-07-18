@@ -1,6 +1,5 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
-import data from "./test.json";
 import SearchResult from "./SearchResult";
 import { useDispatch, useSelector } from "react-redux";
 import { typingType } from "./SearchForm";
