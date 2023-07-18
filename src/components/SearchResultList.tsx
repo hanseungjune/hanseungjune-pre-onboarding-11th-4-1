@@ -52,6 +52,7 @@ const SearchResultList = () => {
   const dispatch = useDispatch();
   let timeoutId: NodeJS.Timeout | null = null;
 
+  // 말라리아 입력 시 호출 횟수: 1회
   useEffect(() => {
     if (timeoutId) {
       clearTimeout(timeoutId);
@@ -62,6 +63,7 @@ const SearchResultList = () => {
       timeoutId = setTimeout(async () => {
         const response = await httpClient.get(`?q=${typing}`);
         dispatch(setShowing(response.data));
+        console.info("calling api");
       }, 300);
     }
 
@@ -72,7 +74,15 @@ const SearchResultList = () => {
     };
   }, [dispatch, typing]);
 
-  console.log(showing);
+  // 말라리아 입력 시 호출 횟수:  12회
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const response = await httpClient.get(`?q=${typing}`);
+  //     dispatch(setShowing(response.data));
+  //     console.info("calling api");
+  //   }
+  //   fetchData();
+  // }, [dispatch, typing]);
 
   return (
     <SearchedListContainerStyle>
