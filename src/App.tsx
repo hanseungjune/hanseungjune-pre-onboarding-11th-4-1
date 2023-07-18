@@ -13,6 +13,8 @@ const AppContainerStyle = styled.section`
   padding: 5% 0%;
 `;
 
+export const API_URL = `http://localhost:4000/sick`;
+
 function App() {
   return (
     <AppContainerStyle>

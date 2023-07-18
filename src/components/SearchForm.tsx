@@ -2,6 +2,8 @@ import { styled } from "styled-components";
 import { FaSearch } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setTyping } from "store/search";
 
 const SearchFormStyle = styled.form`
   width: 50rem;
@@ -20,7 +22,7 @@ const SearchFormStyle = styled.form`
 
 const SearchInputContainerStyle = styled.div`
   width: 90%;
-  height: 100%;
+  height: 4rem;
   display: flex;
   align-items: center;
   background-color: ${(props) => props.theme.buttonTextColor};
@@ -62,12 +64,19 @@ const SearchSubmitContainerStyle = styled.div`
   }
 `;
 
+export interface typingType {
+  searchReducer: {
+    typing: string;
+  };
+}
+
 const SearchForm = () => {
-  const [typing, setTyping] = useState('');
+  const typing = useSelector((state: typingType) => state.searchReducer.typing);
+  const dispatch = useDispatch();
 
   const typingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTyping(e.target.value)
-  }
+    dispatch(setTyping(e.target.value));
+  };
 
   return (
     <SearchFormStyle>
@@ -76,6 +85,7 @@ const SearchForm = () => {
         <SearchInputStyle
           type="text"
           placeholder="질병 및 질환 관련 키워드를 검색해보세요."
+          value={typing}
           onChange={typingChange}
         />
       </SearchInputContainerStyle>

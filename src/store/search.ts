@@ -1,29 +1,22 @@
-const TYPING = "search/typing";
+const SET_TYPING = "search/set_typing";
 
 interface TypingAction {
   type: string;
   payload: string;
 }
 
-export function typingSearch(typing: string): TypingAction {
-  return { type: TYPING, payload: typing };
+export function setTyping(typing: string): TypingAction {
+  return { type: SET_TYPING, payload: typing };
 }
 
-interface State {
-  typing: string;
-}
-
-const INITIAL_STATE: State = {
+const INITIAL_STATE = {
   typing: "",
 };
 
-export function searchReducer(
-  state = INITIAL_STATE,
-  action: TypingAction
-): State {
+export function searchReducer(state = INITIAL_STATE, action: TypingAction) {
   switch (action.type) {
-    case TYPING:
-      return {...state, typing: action.payload}
+    case SET_TYPING:
+      return { ...state, typing: action.payload };
     default:
       return state;
   }
