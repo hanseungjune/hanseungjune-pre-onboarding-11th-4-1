@@ -1,34 +1,40 @@
 import { styled } from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import SearchResult from "./SearchResult";
 import { useDispatch, useSelector } from "react-redux";
 import { typingType } from "./SearchForm";
 import axios from "axios";
 import { API_URL } from "App";
 import { setShowing } from "store/result";
+import { useShowing, useTyping } from "hooks/hooks";
 
 const SearchedListContainerStyle = styled.section`
-  width: 50rem;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  justify-content: flex-start;
-  background-color: ${(props) => props.theme.buttonTextColor};
-  padding: 20px 25px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
-  border-bottom-left-radius: 30px;
-  border-bottom-right-radius: 30px;
-
-  & > span {
-    color: ${(props) => props.theme.recommendTextColor};
-    font-size: 12px;
-    font-weight: 700;
-    margin: 10px 5px;
-    background-color: ${(props) => props.theme.buttonTextColor};
-  }
+  ${({ theme }) => {
+    const { buttonTextColor, recommendTextColor } = theme;
+    return `
+    width: 50rem;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: flex-start;
+    background-color: ${buttonTextColor};
+    padding: 20px 25px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+  
+    & > span {
+      color: ${recommendTextColor};
+      font-size: 12px;
+      font-weight: 700;
+      margin: 10px 5px;
+      background-color: ${buttonTextColor};
+    }
+    `;
+  }}
 `;
 
 interface setShowingType {
@@ -43,10 +49,8 @@ export interface showingType {
 }
 
 const SearchResultList = () => {
-  const typing = useSelector((state: typingType) => state.searchReducer.typing);
-  const showing = useSelector(
-    (state: showingType) => state.resultReducer.showing
-  );
+  const typing = useTyping();
+  const showing = useShowing();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -58,7 +62,7 @@ const SearchResultList = () => {
       dispatch(setShowing(response.data));
     };
     fetchSearchData();
-  }, [dispatch, setShowing, typing]);
+  }, [typing]);
 
   console.log(showing);
 

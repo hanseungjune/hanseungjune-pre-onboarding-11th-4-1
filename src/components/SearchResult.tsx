@@ -2,9 +2,14 @@ import { styled } from "styled-components";
 import { FaSearch } from "react-icons/fa";
 
 const SearchIconStyle = styled(FaSearch)`
+  ${({ theme }) => {
+    const { buttonTextColor } = theme;
+    return `
   font-size: 25px;
-  background-color: ${(props) => props.theme.buttonTextColor};
+  background-color: ${buttonTextColor};
   margin-right: 15px;
+  `;
+  }}
 `;
 
 interface SearchedListStyleProps {
@@ -13,17 +18,22 @@ interface SearchedListStyleProps {
 }
 
 const SearchedListStyle = styled.div<SearchedListStyleProps>`
+  ${({ theme }) => {
+    const { buttonTextColor } = theme;
+    return `
   display: flex;
   align-items: center;
   margin: 10px 10px;
-  background-color: ${(props) => props.theme.buttonTextColor};
+  background-color: ${buttonTextColor};
 
   & > span {
-    background-color: ${(props) => props.theme.buttonTextColor};
+    background-color: ${buttonTextColor};
     font-size: 15px;
-    font-weight: ${(props) =>
+    font-weight: ${(props: SearchedListStyleProps) =>
       props.len > 0 && props.typing?.trim() !== "" ? 500 : 900};
   }
+  `;
+  }}
 `;
 
 interface SearchResultPropsType {
