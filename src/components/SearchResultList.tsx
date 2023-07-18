@@ -1,12 +1,10 @@
 import { styled } from "styled-components";
 import { useEffect } from "react";
-import SearchResult from "./SearchResult";
-import { useDispatch, useSelector } from "react-redux";
-import { typingType } from "./SearchForm";
-import axios from "axios";
-import { API_URL } from "App";
+import { useDispatch } from "react-redux";
 import { setShowing } from "store/result";
 import { useShowing, useTyping } from "hooks/hooks";
+import SearchResult from "./SearchResult";
+import httpClient from "../httpClient";
 
 const SearchedListContainerStyle = styled.section`
   ${({ theme }) => {
@@ -37,7 +35,7 @@ const SearchedListContainerStyle = styled.section`
   }}
 `;
 
-interface setShowingType {
+export interface setShowingType {
   sickCd: string;
   sickNm: string;
 }
@@ -52,19 +50,6 @@ const SearchResultList = () => {
   const typing = useTyping();
   const showing = useShowing();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const fetchSearchData = async () => {
-      const response = await axios({
-        url: `${API_URL}?q=${typing}`,
-        method: "GET",
-      });
-      dispatch(setShowing(response.data));
-    };
-    fetchSearchData();
-  }, [typing]);
-
-  console.log(showing);
 
   return (
     <SearchedListContainerStyle>
