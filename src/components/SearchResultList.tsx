@@ -17,6 +17,7 @@ const SearchedListContainerStyle = styled.section`
   background-color: ${(props) => props.theme.buttonTextColor};
   padding: 20px 25px;
   margin-top: 20px;
+  margin-bottom: 20px;
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
   border-bottom-left-radius: 30px;
@@ -71,7 +72,11 @@ const SearchResultList = () => {
           return <SearchResult len={showing.length} title={item.sickNm} />;
         })
       ) : (
-        <SearchResult len={showing.length} title={"검색어 없음"} typing={typing}/>
+        <SearchResult
+          len={showing.length}
+          title={"검색어 없음"}
+          typing={typing}
+        />
       )}
     </SearchedListContainerStyle>
   );
