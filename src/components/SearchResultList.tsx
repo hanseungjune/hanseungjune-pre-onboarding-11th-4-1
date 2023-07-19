@@ -74,16 +74,6 @@ const SearchResultList = () => {
     };
   }, [dispatch, typing]);
 
-  // 말라리아 입력 시 호출 횟수:  12회
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await httpClient.get(`?q=${typing}`);
-  //     dispatch(setShowing(response.data));
-  //     console.info("calling api");
-  //   }
-  //   fetchData();
-  // }, [dispatch, typing]);
-
   return (
     <SearchedListContainerStyle>
       <span>추천 검색어</span>
