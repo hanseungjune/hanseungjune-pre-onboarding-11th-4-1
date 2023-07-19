@@ -6,13 +6,13 @@ import { useDispatch } from "react-redux";
 import { setShowing } from "store/result";
 import SearchResult from "./SearchResult";
 import httpClient from "../httpClient";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 const SearchResultList = () => {
-  const typing = useTyping();
-  const showing = useShowing();
   const activeSearchIndex = useActiveSearchIndex();
   const dispatch = useDispatch();
+  const showing = useShowing();
+  const typing = useTyping();
 
   let timeoutId: NodeJS.Timeout | null = null;
 
@@ -57,4 +57,4 @@ const SearchResultList = () => {
   );
 };
 
-export default SearchResultList;
+export default React.memo(SearchResultList);
