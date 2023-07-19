@@ -1,104 +1,14 @@
-import { styled } from "styled-components";
-import { FaSearch } from "react-icons/fa";
-import React from "react";
-import { useDispatch } from "react-redux";
-import { setActiveSearchIndex, setTyping } from "store/search";
 import { useActiveSearchIndex, useShowing, useTyping } from "hooks/hooks";
-import { setShowingType } from "./SearchResultList";
-
-const SearchFormStyle = styled.form`
-  ${({ theme }) => {
-    const { buttonTextColor } = theme;
-    return `
-      width: 50rem;
-      height: 4rem;
-      position: relative;
-      display: flex;
-      align-items: center;
-      background-color: ${buttonTextColor};
-      border-radius: 30px;
-      padding: 0 30px;
-      margin-top: 3vh;
-    `;
-  }}
-`;
-
-const SearchInputContainerStyle = styled.div`
-  ${({ theme }) => {
-    const { buttonTextColor } = theme;
-    return `
-    width: 90%;
-    height: 4rem;
-    display: flex;
-    align-items: center;
-    background-color: ${buttonTextColor};
-    `;
-  }}
-`;
-
-const SearchIconStyle = styled(FaSearch)`
-  ${({ theme }) => {
-    const { buttonTextColor } = theme;
-    return `
-    font-size: 25px;
-    background-color: ${buttonTextColor};
-    margin-right: 15px;
-    `;
-  }}
-`;
-
-const SearchInputStyle = styled.input`
-  ${({ theme }) => {
-    const { buttonTextColor } = theme;
-    return `
-  background-color: ${buttonTextColor};
-  font-size: 18px;
-  font-weight: 500;
-
-  &::placeholder {
-    font-size: 18px;
-  }
-  `;
-  }}
-`;
-
-const SearchSubmitContainerStyle = styled.div`
-  ${({ theme }) => {
-    const { buttonColor, buttonTextColor } = theme;
-    return `
-  width: 12%;
-  height: 100%;
-  position: absolute;
-  right: 0px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  align-items: center;
-  background-color: ${buttonColor};
-  border-top-right-radius: 30px;
-  border-bottom-right-radius: 30px;
-
-  & > button {
-    background-color: ${buttonColor};
-    color: ${buttonTextColor};
-    font-weight: 900;
-  }
-  `;
-  }}
-`;
-
-export interface typingAndactiveSearchIndexType {
-  searchReducer: {
-    typing: string;
-    activeSearchIndex: number;
-  };
-}
-
-export interface showingType {
-  resultReducer: {
-    showing: setShowingType[];
-  };
-}
+import { setActiveSearchIndex, setTyping } from "store/search";
+import { useDispatch } from "react-redux";
+import React from "react";
+import {
+  SearchFormStyle,
+  SearchIconStyle,
+  SearchInputContainerStyle,
+  SearchInputStyle,
+  SearchSubmitContainerStyle,
+} from "styles/styles";
 
 const SearchForm = () => {
   const typing = useTyping();

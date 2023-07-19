@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 class HttpClient {
@@ -30,5 +31,4 @@ class HttpClient {
   }
 }
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default new HttpClient();

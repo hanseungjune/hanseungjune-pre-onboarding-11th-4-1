@@ -25,18 +25,6 @@ export const GlobalStyle = createGlobalStyle`
             font-style: normal;
         }
     
-        @font-face {
-            font-family: 'LINESeedKR-Bd';
-            src: local('LINESeedKR-Bd'), local('LINESeedKR-Bd');
-            font-style: normal;
-        }
-    
-        @font-face {
-            font-family: 'LINESeedKR-Th';
-            src: local('LINESeedKR-Th'), local('LINESeedKR-Th');
-            font-style: normal;
-        }
-    
         ${reset}
     
         * {

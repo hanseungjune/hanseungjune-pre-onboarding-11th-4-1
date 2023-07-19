@@ -1,11 +1,4 @@
-import { styled } from "styled-components";
-
-const TitleH1Style = styled.h1`
-  font-size: 2.5rem;
-  font-weight: 900;
-  margin-bottom: 1rem;
-  letter-spacing: -0.2rem;
-`;
+import { TitleH1Style } from "styles/styles";
 
 const SearchHeader = () => {
   return (

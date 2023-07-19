@@ -1,17 +1,7 @@
-import { styled } from "styled-components";
 import SearchHeader from "./components/SearchHeader";
 import SearchForm from "./components/SearchForm";
 import SearchResultList from "./components/SearchResultList";
-
-const AppContainerStyle = styled.section`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  padding: 5% 0%;
-`;
+import { AppContainerStyle } from "styles/styles";
 
 function App() {
   return (

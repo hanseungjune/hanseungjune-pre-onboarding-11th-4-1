@@ -1,4 +1,5 @@
-import { setShowingType } from "components/SearchResultList";
+import { setShowingType } from "interface/interface";
+
 const SET_SHOWING = "result/set_showing";
 
 interface ShowingAction {

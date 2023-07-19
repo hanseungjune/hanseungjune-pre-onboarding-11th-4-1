@@ -1,17 +1,10 @@
-import ReactDOM from "react-dom/client";
-import App from "./App";
-import { GlobalStyle } from "./GlobalStyle";
 import { ThemeProvider } from "styled-components";
-import { store } from "store";
+import { GlobalStyle } from "./GlobalStyle";
+import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
-
-const theme = {
-  textColor: "#343434",
-  recommendTextColor: "#7f7f7fc3",
-  backgroundColor: "#d0e8fd",
-  buttonColor: "#357ae1",
-  buttonTextColor: "#ffffff",
-};
+import { theme } from "styles/styles";
+import { store } from "store";
+import App from "./App";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

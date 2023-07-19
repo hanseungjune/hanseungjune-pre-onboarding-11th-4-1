@@ -11,7 +11,7 @@ interface ActiveSearchIndexAction {
   payload: number;
 }
 
-export type SearchActionTypes = TypingAction | ActiveSearchIndexAction;
+type SearchActionTypes = TypingAction | ActiveSearchIndexAction;
 
 export function setTyping(typing: string): TypingAction {
   return { type: SET_TYPING, payload: typing };
@@ -26,12 +26,15 @@ const INITIAL_STATE = {
   activeSearchIndex: -1,
 };
 
-export function searchReducer(state = INITIAL_STATE, action: SearchActionTypes) {
+export function searchReducer(
+  state = INITIAL_STATE,
+  action: SearchActionTypes
+) {
   switch (action.type) {
     case SET_TYPING:
       return { ...state, typing: action.payload };
     case SET_ACTIVE_SEARCH_INDEX:
-      return { ...state, activeSearchIndex: action.payload }
+      return { ...state, activeSearchIndex: action.payload };
     default:
       return state;
   }

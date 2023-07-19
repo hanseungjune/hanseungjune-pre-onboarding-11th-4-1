@@ -156,6 +156,7 @@
     <img src="public\assets\디바운싱 기능 구현.gif" alt="한국임상정보 Page"/>
 
 - 키보드만으로 추천 검색어들로 이동 가능하도록 구현
+
   - 사용법 README에 기술
 
     ```tsx
@@ -181,8 +182,8 @@
     시작이 -1이기 때문에 input 태그에서 ArrowDown 키를 누르면 0이 되면서 포커싱이 시작된다.
 
     그리고 인덱스가 보여주는 리스트의 길이보다 넘어가게 될 수 있기 때문에 인덱스 파티셔닝을 통해서
-    함수가 실행 될 수 있게 하였고, 원하는 인덱스의 요소를 선택하고 싶을 때는 엔터를 누르면서 setTyping이라는 액션을 실행하여 추천 검색어 API를 요청한다. 
-    
+    함수가 실행 될 수 있게 하였고, 원하는 인덱스의 요소를 선택하고 싶을 때는 엔터를 누르면서 setTyping이라는 액션을 실행하여 추천 검색어 API를 요청한다.
+
     API를 요청하고 인덱스는 다시 -1로 바꿔줌으로써 인덱싱을 초기화한다.
 
     ```tsx
@@ -192,19 +193,24 @@
       {/* 추천 검색어 리스트 */}
       {showing.length > 0 && typing.trim() !== "" ? (
         showing.map((item: setShowingType, index: number) => {
-          return <SearchResult key={index} isActive={activeSearchIndex===index} title={item.sickNm} />;
+          return (
+            <SearchResult
+              key={index}
+              isActive={activeSearchIndex === index}
+              title={item.sickNm}
+            />
+          );
         })
       ) : (
-        <SearchResult
-          title={"검색어 없음"}
-        />
+        <SearchResult title={"검색어 없음"} />
       )}
     </SearchedListContainerStyle>
     ```
+
     해당 코드에서는 isActive라는 props를 넘겨줌으로써 어떤 요소에 포커싱이 기억되는지 체크하기 위해서 isActive가 true를 뱉어내면, 배경색을 바꿔줌으로써 기억하게 된다.
 
     ```tsx
-    const SearchedListStyle = styled.div<SearchedListStyleProps>`
+    const SearchedListStyle = styled.div<SearchResultPropsType>`
       ${({ theme, isActive }) => {
         const { buttonTextColor } = theme;
         return `
@@ -212,19 +218,16 @@
         align-items: center;
         margin: 10px 10px;
         background-color: ${buttonTextColor};
-
+    
         & > span {
           margin-left: 10px;
-          background-color: ${isActive ? "yellow !important" : "white !important"};
+          background-color: ${
+            isActive ? "yellow !important" : "white !important"
+          };
         }
         `;
       }}
     `;
-
-    interface SearchResultPropsType {
-      title: string;
-      isActive?: boolean;
-    }
 
     const SearchResult = ({ title, isActive }: SearchResultPropsType) => {
       return (
@@ -241,7 +244,7 @@
     인덱스를 포커싱 함에 따라서 글의 배경색이 바뀌게하는 코드이다.
 
     - 추가로 Enter를 눌렀을 때, form 태그의 onSubmit 이벤트가 자동으로 중첩되서 실행이 됩니다.
-    그래서 e.preventDefault()를 통해서 이벤트를 중지하게 했다.
+      그래서 e.preventDefault()를 통해서 이벤트를 중지하게 했다.
 
     <img src="public\assets\키보드 이동 기능 구현.gif" alt="한국임상정보 Page"/>
 
@@ -276,9 +279,7 @@
  ┃ ┣ 📜SearchResult.tsx
  ┃ ┗ 📜SearchResultList.tsx
  ┣ 📂fonts
- ┃ ┣ 📜LINESeedKR-Bd.ttf
- ┃ ┣ 📜LINESeedKR-Rg.ttf
- ┃ ┗ 📜LINESeedKR-Th.ttf
+ ┃ ┗ 📜LINESeedKR-Rg.ttf
  ┣ 📂hooks
  ┃ ┗ 📜hooks.ts
  ┣ 📂interface
