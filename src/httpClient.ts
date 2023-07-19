@@ -7,10 +7,32 @@ class HttpClient {
     baseURL: this.BASE_URL,
   });
 
-  get = (
+  private cache = new Map<string, { data: any; timestamp: number }>();
+
+  private cacheExpiry = 60 * 60 * 1000;
+
+  async get(
     path: string,
     config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<any>> => this.axiosInstance.get(path, config);
+  ): Promise<AxiosResponse<any>> {
+    const cacheKey = JSON.stringify({ path, config });
+
+    const cachedResponse = this.cache.get(cacheKey);
+
+    if (cachedResponse) {
+      if (Date.now() - cachedResponse.timestamp < this.cacheExpiry) {
+        return cachedResponse.data;
+      }
+
+      this.cache.delete(cacheKey);
+    }
+
+    const response = await this.axiosInstance.get(path, config);
+
+    this.cache.set(cacheKey, { data: response, timestamp: Date.now() });
+
+    return response;
+  }
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
