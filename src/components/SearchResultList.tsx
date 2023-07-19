@@ -1,11 +1,10 @@
 import { styled } from "styled-components";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setShowing } from "store/result";
-import { useShowing, useTyping } from "hooks/hooks";
+import { useActiveSearchIndex, useShowing, useTyping } from "hooks/hooks";
 import SearchResult from "./SearchResult";
 import httpClient from "../httpClient";
-import { typingAndactiveSearchIndexType } from "./SearchForm";
 
 const SearchedListContainerStyle = styled.section`
   ${({ theme }) => {
@@ -50,12 +49,10 @@ export interface showingType {
 const SearchResultList = () => {
   const typing = useTyping();
   const showing = useShowing();
+  const activeSearchIndex = useActiveSearchIndex();
+
   const dispatch = useDispatch();
   let timeoutId: NodeJS.Timeout | null = null;
-
-  const activeSearchIndex = useSelector(
-    (state: typingAndactiveSearchIndexType) => state.searchReducer.activeSearchIndex
-  );
 
   // 말라리아 입력 시 호출 횟수: 1회
   useEffect(() => {

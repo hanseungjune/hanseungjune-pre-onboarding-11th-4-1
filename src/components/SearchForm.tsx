@@ -1,9 +1,9 @@
 import { styled } from "styled-components";
 import { FaSearch } from "react-icons/fa";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useDispatch } from "react-redux";
 import { setActiveSearchIndex, setTyping } from "store/search";
-import { useTyping } from "hooks/hooks";
+import { useActiveSearchIndex, useShowing, useTyping } from "hooks/hooks";
 import { setShowingType } from "./SearchResultList";
 
 const SearchFormStyle = styled.form`
@@ -103,13 +103,8 @@ export interface showingType {
 const SearchForm = () => {
   const typing = useTyping();
   const dispatch = useDispatch();
-  const activeSearchIndex = useSelector(
-    (state: typingAndactiveSearchIndexType) =>
-      state.searchReducer.activeSearchIndex
-  );
-  const showing = useSelector(
-    (state: showingType) => state.resultReducer.showing
-  );
+  const activeSearchIndex = useActiveSearchIndex();
+  const showing = useShowing();
 
   const typingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setTyping(e.target.value));
@@ -126,6 +121,7 @@ const SearchForm = () => {
       );
     } else if (e.key === "Enter" && activeSearchIndex > -1) {
       dispatch(setTyping(showing[activeSearchIndex].sickNm));
+      dispatch(setActiveSearchIndex(-1));
     }
   };
 

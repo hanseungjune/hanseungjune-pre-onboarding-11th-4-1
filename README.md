@@ -158,18 +158,103 @@
 - 키보드만으로 추천 검색어들로 이동 가능하도록 구현
   - 사용법 README에 기술
 
-```js
+    ```tsx
+    // SearchFrom.tsx
+    const KeyboardMove = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "ArrowUp") {
+        dispatch(setActiveSearchIndex(Math.max(activeSearchIndex - 1, -1)));
+      } else if (e.key === "ArrowDown") {
+        dispatch(
+          setActiveSearchIndex(
+            Math.min(activeSearchIndex + 1, showing.length - 1)
+          )
+        );
+      } else if (e.key === "Enter" && activeSearchIndex > -1) {
+        dispatch(setTyping(showing[activeSearchIndex].sickNm));
+        dispatch(setActiveSearchIndex(-1));
+      }
+    };
+    ```
 
-```
+    해당 함수는 키보드를 통해서 포커스를 잡을 인덱스를 기억하는 함수이다.
 
-- ⭕ 화면 전체 스켈레톤 코드 작성
-- ⭕ 화면 전체 레이아웃 및 페인팅 코드 작성
-- ⭕ 검색 및 추천 검색어 요청 기능 구현
-- ⭕ HttpClient Class를 활용한 axios API 연동
-- ⭕ Redux를 통한 전역 상태 관리
-- ⭕ API 호출 횟수 감소를 위한 리팩토링
-- ⭕ class를 활용하여 API 호출 별로 로컬 캐싱 구현
-- ❌ 키보드만으로 추천 검색어들로 이동 가능하도록 구현
+    시작이 -1이기 때문에 input 태그에서 ArrowDown 키를 누르면 0이 되면서 포커싱이 시작된다.
+
+    그리고 인덱스가 보여주는 리스트의 길이보다 넘어가게 될 수 있기 때문에 인덱스 파티셔닝을 통해서
+    함수가 실행 될 수 있게 하였고, 원하는 인덱스의 요소를 선택하고 싶을 때는 엔터를 누르면서 setTyping이라는 액션을 실행하여 추천 검색어 API를 요청한다. 
+    
+    API를 요청하고 인덱스는 다시 -1로 바꿔줌으로써 인덱싱을 초기화한다.
+
+    ```tsx
+    // SearchResultList.tsx
+    <SearchedListContainerStyle>
+      <span>추천 검색어</span>
+      {/* 추천 검색어 리스트 */}
+      {showing.length > 0 && typing.trim() !== "" ? (
+        showing.map((item: setShowingType, index: number) => {
+          return <SearchResult key={index} isActive={activeSearchIndex===index} title={item.sickNm} />;
+        })
+      ) : (
+        <SearchResult
+          title={"검색어 없음"}
+        />
+      )}
+    </SearchedListContainerStyle>
+    ```
+    해당 코드에서는 isActive라는 props를 넘겨줌으로써 어떤 요소에 포커싱이 기억되는지 체크하기 위해서 isActive가 true를 뱉어내면, 배경색을 바꿔줌으로써 기억하게 된다.
+
+    ```tsx
+    const SearchedListStyle = styled.div<SearchedListStyleProps>`
+      ${({ theme, isActive }) => {
+        const { buttonTextColor } = theme;
+        return `
+        display: flex;
+        align-items: center;
+        margin: 10px 10px;
+        background-color: ${buttonTextColor};
+
+        & > span {
+          margin-left: 10px;
+          background-color: ${isActive ? "yellow !important" : "white !important"};
+        }
+        `;
+      }}
+    `;
+
+    interface SearchResultPropsType {
+      title: string;
+      isActive?: boolean;
+    }
+
+    const SearchResult = ({ title, isActive }: SearchResultPropsType) => {
+      return (
+        <>
+          <SearchedListStyle isActive={isActive}>
+            <SearchIconStyle />
+            <span>{title}</span>
+          </SearchedListStyle>
+        </>
+      );
+    };
+    ```
+
+    인덱스를 포커싱 함에 따라서 글의 배경색이 바뀌게하는 코드이다.
+
+    - 추가로 Enter를 눌렀을 때, form 태그의 onSubmit 이벤트가 자동으로 중첩되서 실행이 됩니다.
+    그래서 e.preventDefault()를 통해서 이벤트를 중지하게 했다.
+
+    <img src="public\assets\키보드 이동 기능 구현.gif" alt="한국임상정보 Page"/>
+
+## 🎤 기능 구현 상황
+
+- ⭕ 화면 전체 스켈레톤 코드 작성 완료
+- ⭕ 화면 전체 레이아웃 및 페인팅 코드 작성 완료
+- ⭕ 검색 및 추천 검색어 요청 기능 구현 완료
+- ⭕ HttpClient Class를 활용한 axios API 연동 완료
+- ⭕ Redux를 통한 전역 상태 관리 완료
+- ⭕ API 호출 횟수 감소를 위한 디바운싱 완료
+- ⭕ class를 활용하여 API 호출 별로 로컬 캐싱 구현 완료
+- ⭕ 키보드만으로 추천 검색어들로 이동 가능하도록 구현 완료
 
 <br/>
 
@@ -223,8 +308,19 @@
   <tbody>
     <tr>
       <td>
+        <li>사실 클래스를 통해서 httpClient Class를 만들어 본 것이 처음이었다. 그래서 안해본 것을 하다보니 어려움이 있었지만, API 요청에 대한 캐싱 작업등을 해보면서 class에 대한 위화감이 사라지고, 꼭 필요하구나 하는 느낌을 받았다. 많이 배웠다.</li>
+        <li>그리고 이전에 프로젝트 할 때는 입력할 때마다 HTTP 요청을 했었고, 요청 횟수를 줄이는 것에 대한 생각을 해본 적이 없었다. 하지만 서버의 부하 감소라던지, 네트워크 지연 시간 감소 등의 이유를 알게 되었고 이 또한 배웠다고 생각한다.
+        </li>
+        <li>키보드를 통해서 추천 검색어를 선택하는 것에 대한 생각도 역시 해본적이 없는데, 이것도 사용자 경험을 위해서는 꼭 필요한 작업이라고 생각했다. 물론 사실 여기서 제일 구현하기 힘든 기능이었다. 그럼에도 열심히 구글링하면서 찾아보았고, 여러가지 시행 착오를 겪으면서 기능을 구현하여 뿌듯해서 좋았다.
+        </li>
+        <li>CustomHook을 만들어서 사용해봄으로써, 커스텀 훅의 재사용성에 대해서 많이 배웠다고 생각한다. 앞으로도 특별한 기능이 아니고 일반적인 기능을 구현할 때, custom Hook을 사용하는 것을 항상 고려하는 습관을 지녀야겠다.
+        </li>
       </td>
       <td>
+      <li>아쉬웠던 점은 이전 팀 프로젝트를 몸이 좀 안좋았어서 참여를 못했고, 그로 인해서 배워가지 못한 부분이 있을 것이라고 생각했는데, 그래서 이번에 최종 프로젝트를 하면서 어려움을 겪었다고 생각한다. 그래서 좀 이번 프로젝트를 하면서 아쉬움을 느꼈다.
+      </li>
+      <li>컴포넌트를 나누기 전에 키보드 이동 기능부터 구현했었다면, 조금 더 편하게 코드를 작성할 수 있지 않을까하는 생각이 들었다. 그게 아쉬웠다.
+      </li>
       </td>
     </tr>
   </tbody>

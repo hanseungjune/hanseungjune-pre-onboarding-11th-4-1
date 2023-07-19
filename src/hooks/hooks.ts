@@ -9,3 +9,7 @@ export const useTyping = () => {
 export const useShowing = () => {
   return useSelector((state: showingType) => state.resultReducer.showing);
 };
+
+export const useActiveSearchIndex = () => {
+  return useSelector((state: typingAndactiveSearchIndexType) => state.searchReducer.activeSearchIndex);
+};
