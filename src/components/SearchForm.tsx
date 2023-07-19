@@ -1,9 +1,10 @@
 import { styled } from "styled-components";
 import { FaSearch } from "react-icons/fa";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setTyping } from "store/search";
+import { setActiveSearchIndex, setTyping } from "store/search";
 import { useTyping } from "hooks/hooks";
+import { setShowingType } from "./SearchResultList";
 
 const SearchFormStyle = styled.form`
   ${({ theme }) => {
@@ -86,22 +87,54 @@ const SearchSubmitContainerStyle = styled.div`
   }}
 `;
 
-export interface typingType {
+export interface typingAndactiveSearchIndexType {
   searchReducer: {
     typing: string;
+    activeSearchIndex: number;
+  };
+}
+
+export interface showingType {
+  resultReducer: {
+    showing: setShowingType[];
   };
 }
 
 const SearchForm = () => {
   const typing = useTyping();
   const dispatch = useDispatch();
+  const activeSearchIndex = useSelector(
+    (state: typingAndactiveSearchIndexType) =>
+      state.searchReducer.activeSearchIndex
+  );
+  const showing = useSelector(
+    (state: showingType) => state.resultReducer.showing
+  );
 
   const typingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setTyping(e.target.value));
   };
 
+  const KeyboardMove = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowUp") {
+      dispatch(setActiveSearchIndex(Math.max(activeSearchIndex - 1, -1)));
+    } else if (e.key === "ArrowDown") {
+      dispatch(
+        setActiveSearchIndex(
+          Math.min(activeSearchIndex + 1, showing.length - 1)
+        )
+      );
+    } else if (e.key === "Enter" && activeSearchIndex > -1) {
+      dispatch(setTyping(showing[activeSearchIndex].sickNm));
+    }
+  };
+
+  const SubmitStop = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
   return (
-    <SearchFormStyle>
+    <SearchFormStyle onSubmit={SubmitStop}>
       <SearchInputContainerStyle>
         <SearchIconStyle />
         <SearchInputStyle
@@ -109,6 +142,7 @@ const SearchForm = () => {
           placeholder="질병 및 질환 관련 키워드를 검색해보세요."
           value={typing}
           onChange={typingChange}
+          onKeyDown={KeyboardMove}
         />
       </SearchInputContainerStyle>
       <SearchSubmitContainerStyle>

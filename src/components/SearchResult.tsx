@@ -13,39 +13,35 @@ const SearchIconStyle = styled(FaSearch)`
 `;
 
 interface SearchedListStyleProps {
-  len: number;
-  typing?: string;
+  isActive?: boolean;
 }
 
 const SearchedListStyle = styled.div<SearchedListStyleProps>`
-  ${({ theme }) => {
+  ${({ theme, isActive }) => {
     const { buttonTextColor } = theme;
     return `
-  display: flex;
-  align-items: center;
-  margin: 10px 10px;
-  background-color: ${buttonTextColor};
-
-  & > span {
+    display: flex;
+    align-items: center;
+    margin: 10px 10px;
     background-color: ${buttonTextColor};
-    font-size: 15px;
-    font-weight: ${(props: SearchedListStyleProps) =>
-      props.len > 0 && props.typing?.trim() !== "" ? 500 : 900};
-  }
-  `;
+
+    & > span {
+      margin-left: 10px;
+      background-color: ${isActive ? "yellow !important" : "white !important"};
+    }
+    `;
   }}
 `;
 
 interface SearchResultPropsType {
-  len: number;
   title: string;
-  typing?: string;
+  isActive?: boolean;
 }
 
-const SearchResult = ({ len, title, typing }: SearchResultPropsType) => {
+const SearchResult = ({ title, isActive }: SearchResultPropsType) => {
   return (
     <>
-      <SearchedListStyle len={len} typing={typing}>
+      <SearchedListStyle isActive={isActive}>
         <SearchIconStyle />
         <span>{title}</span>
       </SearchedListStyle>

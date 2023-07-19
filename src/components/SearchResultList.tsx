@@ -1,10 +1,11 @@
 import { styled } from "styled-components";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setShowing } from "store/result";
 import { useShowing, useTyping } from "hooks/hooks";
 import SearchResult from "./SearchResult";
 import httpClient from "../httpClient";
+import { typingAndactiveSearchIndexType } from "./SearchForm";
 
 const SearchedListContainerStyle = styled.section`
   ${({ theme }) => {
@@ -52,6 +53,10 @@ const SearchResultList = () => {
   const dispatch = useDispatch();
   let timeoutId: NodeJS.Timeout | null = null;
 
+  const activeSearchIndex = useSelector(
+    (state: typingAndactiveSearchIndexType) => state.searchReducer.activeSearchIndex
+  );
+
   // 말라리아 입력 시 호출 횟수: 1회
   useEffect(() => {
     if (timeoutId) {
@@ -79,14 +84,12 @@ const SearchResultList = () => {
       <span>추천 검색어</span>
       {/* 추천 검색어 리스트 */}
       {showing.length > 0 && typing.trim() !== "" ? (
-        showing.map((item: setShowingType) => {
-          return <SearchResult len={showing.length} title={item.sickNm} />;
+        showing.map((item: setShowingType, index: number) => {
+          return <SearchResult key={index} isActive={activeSearchIndex===index} title={item.sickNm} />;
         })
       ) : (
         <SearchResult
-          len={showing.length}
           title={"검색어 없음"}
-          typing={typing}
         />
       )}
     </SearchedListContainerStyle>
