@@ -8,7 +8,6 @@ class HttpClient {
     baseURL: this.BASE_URL,
   });
 
-  private cache = new Map<string, { data: any; timestamp: number }>();
   private cacheExpireTime = 60 * 60 * 1000;
 
   async get(
@@ -16,17 +15,20 @@ class HttpClient {
     config?: AxiosRequestConfig
   ): Promise<AxiosResponse<any>> {
     const cacheKey = JSON.stringify({ path, config });
-    const cachedResponse = this.cache.get(cacheKey);
+    const cachedResponse = JSON.parse(localStorage.getItem(cacheKey) || "null");
 
     if (cachedResponse) {
       if (Date.now() - cachedResponse.timestamp < this.cacheExpireTime) {
         return cachedResponse.data;
       }
-      this.cache.delete(cacheKey);
+      localStorage.removeItem(cacheKey);
     }
 
     const response = await this.axiosInstance.get(path, config);
-    this.cache.set(cacheKey, { data: response, timestamp: Date.now() });
+    localStorage.setItem(
+      cacheKey,
+      JSON.stringify({ data: response, timestamp: Date.now() })
+    );
     return response;
   }
 }

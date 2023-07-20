@@ -78,13 +78,11 @@ env: 모듈 및 라이브러리 설치 등
     class HttpClient {
       private BASE_URL = `http://localhost:4000/sick`;
 
-      // axios 요청 객체 생성
+      // axios 인스턴스 생성
       protected axiosInstance = axios.create({
         baseURL: this.BASE_URL,
       });
 
-      // 캐시 저장 객체 생성(Map)
-      private cache = new Map<string, { data: any; timestamp: number }>();
       // 1시간(임의설정)
       private cacheExpireTime = 60 * 60 * 1000;
 
@@ -92,24 +90,27 @@ env: 모듈 및 라이브러리 설치 등
         path: string,
         config?: AxiosRequestConfig
       ): Promise<AxiosResponse<any>> {
-        // 요청 데이터 키
+        // 캐시를 위한 키 생성. 요청 경로와 설정을 기반으로 함.
         const cacheKey = JSON.stringify({ path, config });
-        // 요청 데이터
-        const cachedResponse = this.cache.get(cacheKey);
+        // 로컬 스토리지에서 캐시 데이터를 조회
+        const cachedResponse = JSON.parse(localStorage.getItem(cacheKey) || "null");
 
         if (cachedResponse) {
-          // 만료되기 전
+          // 만료 시간을 확인해서 만료되지 않았다면 캐시된 데이터를 반환
           if (Date.now() - cachedResponse.timestamp < this.cacheExpireTime) {
             return cachedResponse.data;
           }
-          // 만료됨
-          this.cache.delete(cacheKey);
+          // 만료된 캐시 데이터는 로컬 스토리지에서 삭제
+          localStorage.removeItem(cacheKey);
         }
 
-        // 캐시된 데이터 없을 때
+        // 캐시된 데이터가 없거나 만료된 경우 실제 요청을 수행
         const response = await this.axiosInstance.get(path, config);
-        // 검색 데이터 캐싱
-        this.cache.set(cacheKey, { data: response, timestamp: Date.now() });
+        // 새로 받아온 데이터를 로컬 스토리지에 캐시로 저장. 저장 시점의 타임스탬프와 함께 저장.
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({ data: response, timestamp: Date.now() })
+        );
         return response;
       }
     }
