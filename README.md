@@ -1,4 +1,4 @@
-# Preonboarding Final Project
+# Pre-onboarding Final Project
 
 [![alt text](./public/assets/vercel.png)](https://hanseungjune-pre-onboarding-11th-4-1.vercel.app/)
 
